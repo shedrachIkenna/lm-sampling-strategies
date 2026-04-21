@@ -36,3 +36,10 @@ lr = 3e-4
 max_iters = 2000 
 eval_interval = 100 # record loss every N steps 
 eval_batches = 20 # average val loss over 20 batches 
+
+CONVERGENCE_THRESHOLD = 1.5 
+print(f"Device: {device}")
+print(f"Seed: {SEED}")
+print(f"iters: {max_iters} | Eval every {eval_interval} steps")
+print(f"Val loss averaged over {eval_batches} batches per checkpoint")
+print("="*60)
