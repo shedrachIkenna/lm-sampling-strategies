@@ -25,3 +25,14 @@ def set_seed(seed: int):
     torch.backends.cudnn.benchmark = False 
 
 set_seed(SEED)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+block_size = 64 
+batch_size = 32 
+dropout = 0.1 
+n_embd = 128 
+n_head = 4 
+n_layer = 4 
+lr = 3e-4 
+max_iters = 2000 
+eval_interval = 100 # record loss every N steps 
+eval_batches = 20 # average val loss over 20 batches 
