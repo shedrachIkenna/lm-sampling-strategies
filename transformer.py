@@ -43,3 +43,11 @@ print(f"Seed: {SEED}")
 print(f"iters: {max_iters} | Eval every {eval_interval} steps")
 print(f"Val loss averaged over {eval_batches} batches per checkpoint")
 print("="*60)
+
+
+# Data Loading 
+data_path = Path("/content/tiny.txt")
+assert data_path.exists(), (
+    "tiny.txt not found. Upload your text file to /content/tiny.txt"
+)
+
