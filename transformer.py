@@ -51,3 +51,13 @@ assert data_path.exists(), (
     "tiny.txt not found. Upload your text file to /content/tiny.txt"
 )
 
+text = data_path.read_text(encoding="utf-8")
+chars = sorted(set(text))
+vocab_size = len(chars)
+
+stoi = {ch: i for i, ch in enumerate(chars)} # dictionary of characters to integer IDs 
+itos = {i: ch for ch, i in stoi.items()} # dictionary of interger IDs to character tokens 
+
+def encode(s: str) -> list: 
+    return [stoi[c] for c in s]
+
