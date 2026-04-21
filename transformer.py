@@ -58,6 +58,21 @@ vocab_size = len(chars)
 stoi = {ch: i for i, ch in enumerate(chars)} # dictionary of characters to integer IDs 
 itos = {i: ch for ch, i in stoi.items()} # dictionary of interger IDs to character tokens 
 
-def encode(s: str) -> list: 
+def encode(s: str) -> list:
     return [stoi[c] for c in s]
 
+def decode(lst: list) -> str: 
+    return "".join(itos[i] for i in lst)
+
+
+data = torch.tensor(encode(text), dtype=torch.long) # convert token to tensor
+n = len(data)
+train_data = data[:int(0.9 * n)]
+val_data = data[int(0.9 * n):]
+
+print(f"Corpus: {n:,} tokens")
+print(f"Vocab: {vocab_size} unique characters")
+print(f"Train: {len(train_data):,} tokens")
+print(f"Val: {len(val_data):,} tokens")
+print(f"Valid starting positions: (train): {len(train_data) - block_size}")
+print("=" * 60)
