@@ -91,3 +91,32 @@ def get_batch_random(split: str):
     x = torch.stack([src[i: i + block_size] for i in ix])
     y = torch.stack([src[i + 1: i + block_size + 1] for i in ix])
     return x.to(device), y.to(device)
+
+
+# Shuffle without replacement 
+class ShuffleSampler: 
+    """
+    Epoch-based sampler. Precomputes all valid starting positions 
+    shuffles them, then yields batches in order 
+    When all positions are exhausted, reshuffles and starts a new epoch 
+    Every position is seen exactly once per epoch - no repetition
+    """
+
+    def __init__(self, src: torch.Tensor) -> None: 
+        self.src = src 
+        self.n_valid = len(src) - block_size
+        self._reset()
+
+    def _reset(self) -> None:
+        perm = torch.randperm(self.n_valid)
+        self.queue = perm.tolist()
+    
+    def next_batch(self) -> tuple[torch.Tensor, torch.Tensor]: 
+        if len(self.queue) < batch_size:
+            self._reset() # start new epoch 
+        ix = self.queue[:batch_size]
+        self.queue = self.queue[batch_size:]
+        ix = torch.tensor(ix, dtype=torch.long)
+        x = torch.stack([self.src[i : i + block_size] for i in ix])
+        y = torch.stack([self.src[i + 1 : i + block_size + 1] for i in ix])
+        return x.to(device), y.to(device)
