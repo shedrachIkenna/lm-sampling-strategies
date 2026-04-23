@@ -120,3 +120,18 @@ class ShuffleSampler:
         x = torch.stack([self.src[i : i + block_size] for i in ix])
         y = torch.stack([self.src[i + 1 : i + block_size + 1] for i in ix])
         return x.to(device), y.to(device)
+    
+
+def get_batch_circular(split: str) -> tuple[torch.Tensor, torch.Tensor]:
+    """
+    Treats the data as a ring. Every index in [0, len(src) - 1] is a valid starting position. 
+    Indices near the end wrap back to the beginning using modular arithmetic. 
+
+    Trade-off: occasionally produces a context window that stitches the end of the corpus to the beginning
+    """
+    src = train_data if split == "train" else val_data
+    N = len(src)
+    ix = torch.randint(N, (batch_size,))
+    x = torch.stack([src[torch.arange(i, i + block_size) % N] for i in ix])
+    y = torch.stack([src[torch.arange(i + 1, i + block_size + 1) % N] for i in ix])
+    return x.to(device), y.to(device)
