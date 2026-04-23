@@ -122,6 +122,7 @@ class ShuffleSampler:
         return x.to(device), y.to(device)
     
 
+# Circular sampling 
 def get_batch_circular(split: str) -> tuple[torch.Tensor, torch.Tensor]:
     """
     Treats the data as a ring. Every index in [0, len(src) - 1] is a valid starting position. 
@@ -135,3 +136,33 @@ def get_batch_circular(split: str) -> tuple[torch.Tensor, torch.Tensor]:
     x = torch.stack([src[torch.arange(i, i + block_size) % N] for i in ix])
     y = torch.stack([src[torch.arange(i + 1, i + block_size + 1) % N] for i in ix])
     return x.to(device), y.to(device)
+
+
+# Circular + Shuffle Sampling 
+class CircularShuffleSampler:
+    """
+    Combines the logic of shuffle without replacement and circular sampling \
+    
+    - Full index range [0, len(src) - 1] are valid starting positions via circular wrapping 
+    - Shuffle without replacement ensures every position is visited exactly once per epoch before any index is revisited 
+    """
+
+    def __init__(self, src: torch.Tensor) -> None: 
+        self.src = src 
+        self.N = len(src)
+        self._reset()
+
+    def _reset(self) -> None: 
+        perm = torch.randperm(self.N)
+        self.queue = perm.tolist()
+
+    def next_batch(self) -> tuple[torch.Tensor, torch.Tensor]:
+        if len(self.queue) < batch_size:
+            self._reset()
+        ix = self.queue[:batch_size]
+        self.queue = self.queue[batch_size:]
+        ix = torch.tensor(ix, dtype=torch.long)
+        N = self.N
+        x = torch.stack([self.src[torch.arange(i, i + block_size) % N] for i in ix])
+        y = torch.stack([self.src[torch.arange(i + 1, i + block_size + 1) % N] for i in ix])
+        return x.to(device), y.to(device)
