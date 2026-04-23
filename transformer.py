@@ -76,3 +76,18 @@ print(f"Train: {len(train_data):,} tokens")
 print(f"Val: {len(val_data):,} tokens")
 print(f"Valid starting positions: (train): {len(train_data) - block_size}")
 print("=" * 60)
+
+
+# Sampling Strategies 
+
+# Baseline - Random sampling with replacement 
+def get_batch_random(split: str): 
+    """
+    This is the baseline sampling approach: Samples batch_size starting indices uniformly from [0, len(src) - block_size - 1]
+    Same index can appear multiple times in the same batch or across different steps. No coverage guarantee
+    """
+    src = train_data if split == "train" else val_data
+    ix = torch.randint(len(src) - block_size, (batch_size,))
+    x = torch.stack([src[i: i + block_size] for i in ix])
+    y = torch.stack([src[i + 1: i + block_size + 1] for i in ix])
+    return x.to(device), y.to(device)
