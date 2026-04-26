@@ -205,4 +205,13 @@ class RotaryEmbedding(nn.Module):
         self.register_buffer("cos_cache", emb.cos())
         self.register_buffer("sin_cache", emb.sin())
 
+    def forward(self, seq_len: int) -> tuple[torch.Tensor, torch.Tensor]: 
+        """Returns the cos and sin tables sliced to the actual sequence length"""
+        if seq_len > self.cos_cache.size(0):
+            self._build_cache(seq_len)
+        # Shapes returned: (1, 1, T, d_head) ready to be broadcasted over (B, H, T, d_head)
+        cos = self.cos_cache[:seq_len].unsqueeze(0).unsqueeze(0)
+        sin = self.sin_cache[:seq_len].unsqueeze(0).unsqueeze(0)
+        return cos, sin
+    
     
