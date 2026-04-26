@@ -197,4 +197,12 @@ class RotaryEmbedding(nn.Module):
         # Precompute tables up to max_seq_len -> (max_seq, d_head/2)
         self._build_cache(max_seq)
 
-        
+    def _build_cache(self, seq_len: int) -> None: 
+        pos = torch.arange(seq_len, dtype=self.inv_freq.dtype, device=self.inv_freq.device) # (T,)
+        freqs = torch.outer(pos, self.inv_freq) # (T, d_head/2)
+        # Concatenate so that cos/sin cover all d_head dimensions 
+        emb = torch.cat([freqs, freqs], dim=-1) # (T, d_head)
+        self.register_buffer("cos_cache", emb.cos())
+        self.register_buffer("sin_cache", emb.sin())
+
+    
