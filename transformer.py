@@ -166,3 +166,12 @@ class CircularShuffleSampler:
         x = torch.stack([self.src[torch.arange(i, i + block_size) % N] for i in ix])
         y = torch.stack([self.src[torch.arange(i + 1, i + block_size + 1) % N] for i in ix])
         return x.to(device), y.to(device)
+    
+
+# Rotary Positional Embedding 
+"""
+Implementation Note: 
+    -- The cos/sin tables are precomputed once up to max_seq_len and cached as non-learnable buffers 
+    -- apply_rotary_emb slices the right prefix at runtime, so sequences shorter than max_seq_len are handled with no waste 
+"""
+
