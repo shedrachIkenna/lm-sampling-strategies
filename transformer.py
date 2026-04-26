@@ -175,3 +175,26 @@ Implementation Note:
     -- apply_rotary_emb slices the right prefix at runtime, so sequences shorter than max_seq_len are handled with no waste 
 """
 
+class RotaryEmbedding(nn.Module): 
+    """
+    Precomputes and caches the cos/sin rotation tables for RoPE
+
+    Args: 
+        d_head: dimension of a single attention head (must be even)
+        max_seq: maximum sequence length to precompute 
+        base: frequency base (default = 10000 as used in the original paper)
+    """
+
+    def __init__(self, d_head: int, max_seq: int = 2048, base: int = 10_000) -> None: 
+        super().__init__()
+        assert d_head % 2 == 0, "Rope requires even head dimension"
+        # 0_i = 1 / base^(2i / d_head) for i = 0, 1, ..., d_head/2 - 1
+        # shape: (d_head/2,)
+        inv_freq = 1.0 / (base ** (torch.arange(0, d_head, 2).float() / d_head))
+        self.register_buffer("inv_freq", inv_freq)
+
+
+        # Precompute tables up to max_seq_len -> (max_seq, d_head/2)
+        self._build_cache(max_seq)
+
+        
