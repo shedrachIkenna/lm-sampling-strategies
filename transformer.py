@@ -236,3 +236,16 @@ def apply_rotary_emb(q: torch.Tensor, k: torch.Tensor, cos: torch.Tensor, sin: t
     q_rot = q * cos + _rotate_half(q) * sin 
     k_rot = k * cos + _rotate_half(k) * sin 
     return q_rot, k_rot
+
+class LayerNorm(nn.Module):
+    def __init__(self, dim: int, eps: float = 1e-5) -> None: 
+        super().__init__()
+        self.eps = eps 
+        self.gamma = nn.Parameter(torch.ones(dim))
+        self.beta = nn.Parameter(torch.zeros(dim))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor: 
+        mu = x.mean(-1, keepdim=True)
+        var = x.var(-1, unbiased=True)
+        x_norm = (x - mu) / torch.sqrt(var + self.eps)
+        return self.gamma * x_norm + self.beta
