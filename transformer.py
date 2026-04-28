@@ -249,3 +249,42 @@ class LayerNorm(nn.Module):
         var = x.var(-1, unbiased=True)
         x_norm = (x - mu) / torch.sqrt(var + self.eps)
         return self.gamma * x_norm + self.beta
+    
+class MultiHeadSelfAttention(nn.Module):
+    def __init__(self, d_model: int, n_heads: int, dropout: float = 0.1, rotary_emb: RotaryEmbedding | None = None) -> None: 
+        super.__init__()
+        assert d_model % n_heads == 0 
+        self.n_heads = n_heads 
+        self.d_heads = d_model // n_heads 
+        self.qkv_proj = nn.Linear(d_model, 3 * d_model, bias=False)
+        self.out = nn.Linear(d_model, d_model)
+        self.dropout = nn.Dropout(dropout)
+        self.rotary_emb = rotary_emb # shared across all layers 
+
+    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor: 
+        B, T, D = x.shape 
+        qkv = self.qkv_proj(x).view(B, T, 3, self.n_heads, self.d_heads)
+        q, k, v = qkv[:, :, 0], qkv[:, :, 1], qkv[:, :, 2]
+
+        # Change the shape from [B, T, n_heads, d_head] -> [B, n_heads, T, d_head]
+        q = q.permute(0, 2, 1, 3)
+        k = k.permute(0, 2, 1, 3)
+        v = v.permute(0, 2, 1, 3)
+
+        # apply RoPE to q and k (v is left unrotated)
+        if self.rotary_emb is not None: 
+            cos, sin = self.rotary_emb(T)
+            q, k = apply_rotary_emb(q, k, cos, sin)
+        
+        # Scaled dot product attention
+        scores = torch.matmul(q, k.transpose(-2, -1)) / math.sqrt(self.d_head)
+
+        # Apply mask 
+        if mask is not None: 
+            scores = scores.masked_fill(mask == 0, float=("-inf"))
+        
+        probs = self.dropout(F.softmax(scores, dim=-1))
+        out = torch.matmul(probs, v)
+        out = out.permute(0, 2, 1, 3).contiguous().view(B, T, D)
+        return self.out(out)
+        
