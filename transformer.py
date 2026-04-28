@@ -301,4 +301,17 @@ class FeedForward(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.net(x)
-        
+    
+
+class TransformerBlock(nn.Module):
+    def __init__(self, d_model: int, n_heads: int, d_ff: int, dropout: float=0.1, rotary_emb: RotaryEmbedding | None = None) -> None: 
+        super().__init__()
+        self.ln1 = LayerNorm(d_model)
+        self.attn = MultiHeadSelfAttention(d_model, n_heads, dropout, rotary_emb)
+        self.ln2 = LayerNorm(d_model)
+        self.ffn = FeedForward(d_model, d_ff, dropout)
+
+    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor: 
+        x = x + self.attn(self.ln1(x), mask=mask)
+        x = x + self.ffn(self.ln2(x))
+        return x         
