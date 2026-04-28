@@ -287,4 +287,18 @@ class MultiHeadSelfAttention(nn.Module):
         out = torch.matmul(probs, v)
         out = out.permute(0, 2, 1, 3).contiguous().view(B, T, D)
         return self.out(out)
+    
+
+class FeedForward(nn.Module):
+    def __init__(self, d_model: int, d_ff: int, dropout: float = 0.1) -> None: 
+        super().__init__() 
+        self.net = nn.Sequential(
+            nn.Linear(d_model, d_ff), # Expansion: Projects the token into higher dimension 
+            nn.GELU(), # Activation: Where non-linear and complex relations are learned 
+            nn.Linear(d_ff, d_model), # Contraction: Token's dimension are projected back down to its original dimension 
+            nn.Dropout(dropout), # Regularization: Prevents the model from relying on some particular neuron to prevent overfitting
+        )
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.net(x)
         
