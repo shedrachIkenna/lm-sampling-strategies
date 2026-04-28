@@ -225,3 +225,14 @@ def _rotate_half(x: torch.Tensor) -> torch.Tensor:
     x1, x2 = x[..., :half], x[..., half:]
     return torch.cat([-x2, x1], dim=-1)
 
+
+def apply_rotary_emb(q: torch.Tensor, k: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    """
+    Applies RoPE to query and key tensors
+
+    Returns 
+        q_rot, k_rot: same shape as q and k respectively 
+    """
+    q_rot = q * cos + _rotate_half(q) * sin 
+    k_rot = k * cos + _rotate_half(k) * sin 
+    return q_rot, k_rot
