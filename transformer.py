@@ -214,4 +214,14 @@ class RotaryEmbedding(nn.Module):
         sin = self.sin_cache[:seq_len].unsqueeze(0).unsqueeze(0)
         return cos, sin
     
-    
+
+def _rotate_half(x: torch.Tensor) -> torch.Tensor:
+    """
+    Implementation details: 
+        - split the dimensions into two equal contiguous arrays. 
+        - Pair the dimensions element-wise and apply the rotation matrix logic 
+    """
+    half = x.shape[-1] // 2 
+    x1, x2 = x[..., :half], x[..., half:]
+    return torch.cat([-x2, x1], dim=-1)
+
