@@ -315,3 +315,28 @@ class TransformerBlock(nn.Module):
         x = x + self.attn(self.ln1(x), mask=mask)
         x = x + self.ffn(self.ln2(x))
         return x         
+
+class TinyTransformerLM(nn.Module):
+    def __init__(self, vocab_size: int, d_model: int, n_layers: int, n_heads: int, d_ff: int, block_size: int, dropout: float = 0.1) -> None: 
+        super().__init__()
+        self.token_emb = nn.Embedding(vocab_size, d_model)
+        # RoPE uses one shared instance whose cos/sin tables are reused by every layer. No extra parameters and weight-tying across layers is free
+        d_head = d_model // n_heads 
+        self.rotary_emb = RotaryEmbedding(d_head, max_seq=block_size)
+        self.layers = nn.ModuleList([
+            TransformerBlock(d_model, n_heads, d_ff, dropout, self.rotary_emb)
+            for _ in range(n_layers)
+        ])
+        self.ln_f = LayerNorm(d_model)
+        self.head = nn.Linear(d_model, vocab_size, bias=False)
+        self.block_size = block_size
+
+        # weight tying 
+        self.head.weight = self.token_emb.weight
+
+        mask = torch.tril(torch.ones(block_size, block_size, dtype=torch.bool))
+
+        self.register_buffer("causal_mask", mask.unsqueeze(0).unsqueeze(0))
+
+        self.apply(self._init_weights)
+
