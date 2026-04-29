@@ -379,3 +379,23 @@ class TinyTransformerLM(nn.Module):
             next_tok = torch.multinomial(probs, num_samples=1)
             idx = torch.cat([idx, next_tok], dim=1)
         return idx
+    
+# Evaluation Metrics 
+@torch.no_grad()
+def evaluate(model: TinyTransformerLM, n_batches: int = eval_batches) -> dict: 
+    """
+    Compute mean train and val loss over n_batches batches 
+
+    Using multiple batches gives a much more stable loss estimate than a single batch
+    """
+    model.eval()
+    out = {}
+    for split in ("train", "loss"):
+        losses = []
+        for _ in range(n_batches): 
+            xb, yb = get_batch_random(split)
+            _, loss = model(xb, yb)
+            losses.append(loss.item())
+        out[split] = float(np.mean(losses))
+    model.train()
+    return out
