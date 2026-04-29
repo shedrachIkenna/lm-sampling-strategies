@@ -341,6 +341,14 @@ class TinyTransformerLM(nn.Module):
         self.apply(self._init_weights)
 
     def _init_weights(self, module: nn.Module) -> None: 
+        """
+        Initializes the weights of the model with default values that will make the model stable and more likely to learn 
+        effectively from the very first second of training 
+        Set 
+            - standard deviation = 0.02 
+            - bias = 0 
+            - mean = 0.0 
+        """
         if isinstance(module, nn.Linear): 
             nn.init.normal_(module.weight, mean=0.0, std=0.02)
             if module.bias is not None: 
