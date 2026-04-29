@@ -355,3 +355,17 @@ class TinyTransformerLM(nn.Module):
                 nn.init.zeros_(module.bias)
         elif isinstance(module, nn.Embedding): 
             nn.init.normal_(module.weight, mean=0.0, std=0.02)
+
+    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None) -> tuple[torch.Tensor, torch.Tensor | None]:
+        B, T = idx.size()
+        assert T <= self.block_size
+        x = self.token_emb(idx)
+        # RoPE is applied inside of each layer 
+        mask = self.causal_mask[:, :, :T, :T]
+        for layer in self.layers:
+            x = layer(x, mask=mask)
+        logits = self.head(self.ln_f(x))
+        loss = None 
+        if targets is not None: 
+            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+        return logits, loss 
