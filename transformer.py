@@ -369,3 +369,13 @@ class TinyTransformerLM(nn.Module):
         if targets is not None: 
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
         return logits, loss 
+    
+
+    def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor: 
+        for _ in range(max_new_tokens): 
+            idx_cond = idx[:, -self.block_size :]
+            logits, _ = self(idx_cond)
+            probs = F.softmax(logits[:, -1, :], dim=-1)
+            next_tok = torch.multinomial(probs, num_samples=1)
+            idx = torch.cat([idx, next_tok], dim=1)
+        return idx
