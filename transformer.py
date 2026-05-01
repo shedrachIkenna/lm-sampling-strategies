@@ -478,3 +478,15 @@ del _init_model
 # Instantiate class-based samplers 
 shuffle_sampler = ShuffleSampler(train_data)
 circular_shuffle_sampler = CircularShuffleSampler(train_data)
+
+# Run all four experiment 
+experiments = { 
+    "Random Sampling (Baseline)": lambda: get_batch_random("train"), 
+    "Shuffle Sampling": shuffle_sampler.next_batch, 
+    "Circular Sampling": lambda: get_batch_circular("train"), 
+    "Circular + Shuffle Sampling": circular_shuffle_sampler.next_batch,
+}
+
+results = {}
+for name, fn in experiments.items(): 
+    results[name] = train_run(name, fn)
