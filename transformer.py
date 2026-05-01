@@ -474,3 +474,7 @@ print(f"Model parameters: {n_params:,}")
 print("init_weight.pth saved - all four runs will start from this checkpoint")
 del _init_model
 
+
+# Instantiate class-based samplers 
+shuffle_sampler = ShuffleSampler(train_data)
+circular_shuffle_sampler = CircularShuffleSampler(train_data)
