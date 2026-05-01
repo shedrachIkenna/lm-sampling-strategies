@@ -566,3 +566,25 @@ ax2.set_xlabel("Step")
 ax2.set_ylabel("Loss")
 ax2.legend(fontsize=8)
 ax2.grid(True, alpha=0.3)
+
+
+# Plot 3: Final train vs val loss (grouped bar chart)
+ax3          = fig.add_subplot(gs[1, 0])
+names        = list(results.keys())
+short_names  = ["Random", "Shuffle", "Circular", "Circ+Shuf"]
+x            = np.arange(len(names))
+width        = 0.35
+train_vals   = [results[n]["final_train_loss"] for n in names]
+val_vals     = [results[n]["final_val_loss"]   for n in names]
+bars1 = ax3.bar(x - width / 2, train_vals, width, label="Train", color=[COLORS[n] for n in names], alpha=0.85)
+bars2 = ax3.bar(x + width / 2, val_vals, width, label="Val", color=[COLORS[n] for n in names], alpha=0.45, edgecolor=[COLORS[n] for n in names], linewidth=1.5,)
+ax3.set_title("Final loss comparison", fontsize=11)
+ax3.set_ylabel("Loss")
+ax3.set_xticks(x)
+ax3.set_xticklabels(short_names, fontsize=9)
+ax3.legend(fontsize=9)
+ax3.grid(True, axis="y", alpha=0.3)
+for bar in bars1:
+    ax3.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.005,f"{bar.get_height():.3f}", ha="center", va="bottom", fontsize=7)
+for bar in bars2:
+    ax3.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.005, f"{bar.get_height():.3f}", ha="center", va="bottom", fontsize=7)
