@@ -540,3 +540,13 @@ fig.suptitle(
     y=0.98,
 )
 gs = gridspec.GridSpec(2, 2, figure=fig, hspace=0.4, wspace=0.35)
+
+# Plot 1: Training loss curves 
+ax1 = fig.add_subplot(gs[0, 0])
+for name, res in results.items():
+    ax1.plot(res["iter_history"], res["train_history"], label=name, color=COLORS[name], linewidth=1.8,)
+ax1.set_title("Training loss", fontsize=11)
+ax1.set_xlabel("Step")
+ax1.set_ylabel("Loss")
+ax1.legend(fontsize=8)
+ax1.grid(True, alpha=0.3)
