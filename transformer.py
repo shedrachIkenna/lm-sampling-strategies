@@ -503,4 +503,21 @@ with open(csv_path, "w", newline="") as f:
 
 print(f"\nRaw results saved to {csv_path}")
 
-            
+# Summary Table 
+print("\n" + "=" * 65)
+print(f" {"Technique":<25} {"Final Train":>11} {"Final val":>10} {"Converged @":>12}")
+print("-" * 65)
+for name, res in results.items():
+    conv = (
+        f"step{res['convergence_step']}" if res['convergence_step'] is not None else "not reached"
+    )
+    print(
+        f"{name:<25}"
+        f"{res['final_train_loss']:>11.4f}"
+        f"{res['final_val_los']:>10.4f}"
+        f"{conv:>12}"
+    )
+
+print("=" * 65)
+print(f"  Convergence threshold: val los <= {CONVERGENCE_THRESHOLD}")
+print(f"  Val loss averaged over {eval_batches} batches per checkpoint")
