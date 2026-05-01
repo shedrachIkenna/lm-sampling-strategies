@@ -521,3 +521,22 @@ for name, res in results.items():
 print("=" * 65)
 print(f"  Convergence threshold: val los <= {CONVERGENCE_THRESHOLD}")
 print(f"  Val loss averaged over {eval_batches} batches per checkpoint")
+
+
+# Plots 
+COLORS = {
+    "Random (baseline)"  : "#E24B4A",
+    "Shuffle"            : "#1D9E75",
+    "Circular"           : "#534AB7",
+    "Circular + Shuffle" : "#BA7517",
+}
+
+fig = plt.figure(figsize=(16, 12))
+fig.suptitle(
+    "Sampling Strategy Comparison — Character-Level Transformer LM\n"
+    f"block_size={block_size}  batch_size={batch_size}  "
+    f"n_embd={n_embd}  n_layer={n_layer}  seed={SEED}",
+    fontsize=13,
+    y=0.98,
+)
+gs = gridspec.GridSpec(2, 2, figure=fig, hspace=0.4, wspace=0.35)
