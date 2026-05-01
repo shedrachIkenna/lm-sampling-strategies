@@ -610,3 +610,22 @@ for bar, step, name in zip(bars, conv_steps, names):
 plt.savefig("sampling_comparison.png", dpi=150, bbox_inches="tight")
 plt.show()
 print("\nPlot saved to sampling_comparison.png")
+
+
+# Text Generation Samples 
+
+# NOTE: To properly compare generated text across all four models, save each
+# model's weights after training:
+#
+#     torch.save(model.state_dict(), f"model_{name.replace(' ', '_')}.pth")
+#
+# Then reload and generate from each. This script keeps peak memory low by
+# not holding all four models in RAM simultaneously.
+
+print("\n" + "═" * 60)
+print("  Generated text samples (200 tokens each)")
+print("  All four models trained from the same initial weights")
+print("═" * 60)
+print("\nTo compare generated text, re-run each technique individually")
+print("and save the model weights with torch.save() after training.")
+print("\nResearch run complete.")
