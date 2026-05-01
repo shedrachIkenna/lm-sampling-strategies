@@ -490,3 +490,17 @@ experiments = {
 results = {}
 for name, fn in experiments.items(): 
     results[name] = train_run(name, fn)
+
+
+# Save raw result to csv 
+csv_path = "sampling_results.csv"
+with open(csv_path, "w", newline="") as f: 
+    writer = csv.writer(f)
+    writer.writerow(["technique", "step", "train_loss", "val_loss"])
+    for name, res, in results.items(): 
+        for step, tl, vl, in zip(res["iter_history"], res["train_history"], res["val_history"]):
+            writer.writerow([name, step, f"{tl:.6f}", f"{vl:.6f}"])
+
+print(f"\nRaw results saved to {csv_path}")
+
+            
