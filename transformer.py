@@ -550,3 +550,19 @@ ax1.set_xlabel("Step")
 ax1.set_ylabel("Loss")
 ax1.legend(fontsize=8)
 ax1.grid(True, alpha=0.3)
+
+
+# Plot 2: Validation loss curves
+ax2 = fig.add_subplot(gs[0, 1])
+for name, res in results.items():
+    ax2.plot(res["iter_history"], res["val_history"], label=name, color=COLORS[name], linewidth=1.8,)
+ax2.axhline(
+    y=CONVERGENCE_THRESHOLD, color="black",
+    linestyle="--", linewidth=1, alpha=0.5,
+    label=f"Threshold ({CONVERGENCE_THRESHOLD})",
+)
+ax2.set_title("Validation loss", fontsize=11)
+ax2.set_xlabel("Step")
+ax2.set_ylabel("Loss")
+ax2.legend(fontsize=8)
+ax2.grid(True, alpha=0.3)
