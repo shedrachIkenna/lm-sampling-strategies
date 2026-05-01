@@ -399,3 +399,70 @@ def evaluate(model: TinyTransformerLM, n_batches: int = eval_batches) -> dict:
         out[split] = float(np.mean(losses))
     model.train()
     return out
+
+# Training Loop 
+def train_run(technique_name: str, get_train_batch_fn) -> dict: 
+    """
+    Run a full training loop for one sampling technique 
+
+    Parameters 
+        - technique name: sampling technique labels used in plots and logs 
+        - get_train_batch_fn: callable() => (x,y) tensors for training 
+
+    Returns dict with keys 
+        - iter_history, train_history, val_history 
+        - final_train_loss, final_val_loss, 
+        - convergence_step (step where val loss <= CONVERGENCE_THRESHOLD or None if threshold is never reached)
+    """
+
+    print(f"\n{'-' * 60}")
+    print(f" Run: {technique_name}")
+    print(f"{'=' * 60}")
+
+    # Reload identical initial weights for a fair comparision 
+    set_seed(SEED)
+    model = TinyTransformerLM(vocab_size, n_embd, n_layer, n_head, n_embd * 4, block_size, dropout).to(device)
+    model.load_state_dict(torch.load("init_weights.pth", map_location=device))
+    optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+
+    iter_history = [] 
+    train_history = [] 
+    val_history = [] 
+    convergence_step = None
+
+    for step in range(max_iters): 
+        # training step 
+        xb, yb = get_train_batch_fn()
+        _, loss = model(xb, yb)
+        optimizer.zero_grad(set_to_none=True)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        optimizer.step()
+
+        # Checkpoint 
+        if step % eval_interval == 0 or step == max_iters - 1: 
+            metrics = evaluate(model)
+            iter_history.append(metrics["train"])
+            val_history.append(metrics["val"])
+
+            if convergence_step is None and metrics["val"] <= CONVERGENCE_THRESHOLD: 
+                convergence_step = step
+
+            converged_tag = " <- converged" if convergence_step == step else print(
+                f"Step {step:>4d} | "
+                f"Train {metrics['train']:.4f} | "
+                f"Val {metrics['val']:.4f}"
+                f"{converged_tag}"
+            )
+    
+    return {
+        "iter_history": iter_history, 
+        "train_history": train_history,
+        "val_history": val_history, 
+        "final_train_loss": train_history[-1], 
+        "final_val_loss": val_history[-1], 
+        "convergence_step": convergence_step
+    }
+
+
+
