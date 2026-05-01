@@ -588,3 +588,25 @@ for bar in bars1:
     ax3.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.005,f"{bar.get_height():.3f}", ha="center", va="bottom", fontsize=7)
 for bar in bars2:
     ax3.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.005, f"{bar.get_height():.3f}", ha="center", va="bottom", fontsize=7)
+
+
+# Plot 4: Convergence speed 
+ax4 = fig.add_subplot(gs[1, 1])
+conv_steps = [
+    results[n]["convergence_step"] if results[n]["convergence_step"] is not None
+    else max_iters
+    for n in names
+]
+bars = ax4.bar(short_names, conv_steps, color=[COLORS[n] for n in names], alpha=0.85)
+ax4.axhline(y=max_iters, color="black", linestyle="--", linewidth=1, alpha=0.4, label="Max iterations")
+ax4.set_title(f"Convergence speed\n(step val loss ≤ {CONVERGENCE_THRESHOLD})", fontsize=11)
+ax4.set_ylabel("Step")
+ax4.legend(fontsize=9)
+ax4.grid(True, axis="y", alpha=0.3)
+for bar, step, name in zip(bars, conv_steps, names):
+    label = (str(step) if results[name]["convergence_step"] is not None else "N/A")
+    ax4.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 10,label, ha="center", va="bottom", fontsize=9, fontweight="bold")
+
+plt.savefig("sampling_comparison.png", dpi=150, bbox_inches="tight")
+plt.show()
+print("\nPlot saved to sampling_comparison.png")
