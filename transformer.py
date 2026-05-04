@@ -11,6 +11,7 @@ from pathlib import Path
 from copy import deepcopy
 
 
+
 # Reproducibility 
 SEED = 42 
 
@@ -46,12 +47,20 @@ print("="*60)
 
 
 # Data Loading 
-data_path = Path("/content/tiny.txt")
-assert data_path.exists(), (
-    "tiny.txt not found. Upload your text file to /content/tiny.txt"
-)
+from datasets import load_dataset
 
-text = data_path.read_text(encoding="utf-8")
+print("Loading tinyshakespeare from HuggingFace...")
+_ds = load_dataset("karpathy/tiny_shakespeare", split="train")
+text = _ds[0]["text"]
+del _ds # free memory, we only need raw string 
+
+# data_path = Path("/content/tiny.txt")
+# assert data_path.exists(), (
+#    "tiny.txt not found. Upload your text file to /content/tiny.txt"
+#)
+#text = data_path.read_text(encoding="utf-8")
+
+
 chars = sorted(set(text))
 vocab_size = len(chars)
 
