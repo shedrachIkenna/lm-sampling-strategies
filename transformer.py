@@ -261,7 +261,7 @@ class LayerNorm(nn.Module):
     
 class MultiHeadSelfAttention(nn.Module):
     def __init__(self, d_model: int, n_heads: int, dropout: float = 0.1, rotary_emb: RotaryEmbedding | None = None) -> None: 
-        super.__init__()
+        super().__init__()
         assert d_model % n_heads == 0 
         self.n_heads = n_heads 
         self.d_heads = d_model // n_heads 
