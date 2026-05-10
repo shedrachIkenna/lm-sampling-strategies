@@ -22,10 +22,12 @@ def set_seed(seed: int):
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True 
-    torch.backends.cudnn.benchmark = False 
+        torch.backends.cudnn.deterministic = True 
+        torch.backends.cudnn.benchmark = False 
 
 set_seed(SEED)
+
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 block_size = 64 
 batch_size = 32 
@@ -477,7 +479,7 @@ def train_run(technique_name: str, get_train_batch_fn) -> dict:
 print("\nInitializing model and saving starting weights...")
 set_seed(SEED)
 _init_model = TinyTransformerLM(vocab_size, n_embd, n_layer, n_head, n_embd * 4, block_size, dropout).to(device)
-torch.save(_init_model.state_dict(), "init_weight.pth")
+torch.save(_init_model.state_dict(), "init_weights.pth")
 n_params = sum(p.numel() for p in _init_model.parameters() if p.requires_grad)
 print(f"Model parameters: {n_params:,}")
 print("init_weight.pth saved - all four runs will start from this checkpoint")
