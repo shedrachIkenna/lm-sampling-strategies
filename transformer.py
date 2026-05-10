@@ -27,20 +27,23 @@ def set_seed(seed: int):
 
 set_seed(SEED)
 
-
+# Hyperparameters 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 block_size = 64 
 batch_size = 32 
 dropout = 0.3
-n_embd = 64
+n_embd = 128
 n_head = 4 
-n_layer = 2
+n_layer = 4
 lr = 3e-4 
-max_iters = 500
-eval_interval = 25 # record loss every N steps 
+max_iters = 15_000
+
+eval_interval = 150 # record loss every N steps 
 eval_batches = 20 # average val loss over 20 batches 
 
+# Loss threshold used to measure convergence speed 
 CONVERGENCE_THRESHOLD = 1.5 
+
 print(f"Device: {device}")
 print(f"Seed: {SEED}")
 print(f"iters: {max_iters} | Eval every {eval_interval} steps")
