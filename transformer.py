@@ -52,18 +52,15 @@ print("="*60)
 
 
 # Data Loading 
-from datasets import load_dataset
+import requests
 
-print("Loading tinyshakespeare from HuggingFace...")
-_ds = load_dataset("karpathy/tiny_shakespeare", split="train")
-text = _ds[0]["text"]
-del _ds # free memory, we only need raw string 
-
-# data_path = Path("/content/tiny.txt")
-# assert data_path.exists(), (
-#    "tiny.txt not found. Upload your text file to /content/tiny.txt"
-#)
-#text = data_path.read_text(encoding="utf-8")
+print("Downloading tinyshakespear from Github...")
+_url = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+_resp = requests.get(_url)
+_resp.raise_for_status() # raise exception if download failed 
+text = _resp.text 
+del _resp  # free memory 
+print(f"Download complete. {len(text):,} characters")
 
 
 chars = sorted(set(text))
