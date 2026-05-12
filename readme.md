@@ -22,3 +22,24 @@ This project empirically tests four batch sampling strategies under identical co
 | 2 | **Shuffle without replacement** | All valid positions shuffled via `torch.randperm`, yielded in order. Reshuffled each epoch. | Every valid position seen once per epoch |
 | 3 | **Circular buffer** | Indices sampled from full corpus range. Sequences wrap around end-to-start via modular arithmetic. | None (but no wasted tail positions) |
 | 4 | **Circular + Shuffle** | Full index range via wrapping + shuffle without replacement. | Every valid position seen once per epoch |
+
+--- 
+
+## Key Results 
+
+All four strategies converged identically across 15,000 training steps 
+
+```
+═══════════════════════════════════════════════════════════════
+  Technique             Final Train   Min Val    Final Val
+───────────────────────────────────────────────────────────────
+  Random (baseline)         1.345      1.557       1.557
+  Shuffle                   1.360      1.542       1.584
+  Circular                  1.343      1.556       1.556
+  Circular + Shuffle        1.355      1.533       1.568
+═══════════════════════════════════════════════════════════════
+  Strategy spread in min val loss: 0.024  (within measurement noise)
+```
+
+![Final run results](./figures/sampling_comparison_run4.png)
+
