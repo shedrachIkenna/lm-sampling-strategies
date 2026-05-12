@@ -43,3 +43,13 @@ All four strategies converged identically across 15,000 training steps
 
 ![Final run results](./figures/sampling_comparison_run4.png)
 
+### What actually moved the needle
+ 
+| Variable | Change | Effect on val loss |
+|---|---|---|
+| Corpus size | 10k → 1M tokens | Eliminated catastrophic overfitting |
+| Model capacity | 103k → 800k params | Floor dropped from 1.77 → 1.53 |
+| Dropout | 0.1 → 0.3 | Closed train/val gap from 3.0 → 0.21 |
+| **Sampling strategy** | **Any of four** | **~0.02–0.05 — within noise** |
+
+---
