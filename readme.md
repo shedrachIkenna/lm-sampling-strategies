@@ -19,6 +19,6 @@ This project empirically tests four batch sampling strategies under identical co
 | # | Strategy | Description | Coverage guarantee |
 |---|---|---|---|
 | 1 | **Random (baseline)** | `torch.randint` over valid positions. Same index can repeat across batches. | None |
-| 2 | **Shuffle without replacement** | All valid positions shuffled via `torch.randperm`, yielded in order. Reshuffled each epoch. | Every position seen once per epoch |
+| 2 | **Shuffle without replacement** | All valid positions shuffled via `torch.randperm`, yielded in order. Reshuffled each epoch. | Every valid position seen once per epoch |
 | 3 | **Circular buffer** | Indices sampled from full corpus range. Sequences wrap around end-to-start via modular arithmetic. | None (but no wasted tail positions) |
-| 4 | **Circular + Shuffle** | Full index range via wrapping + shuffle without replacement. | Every position seen once per epoch |
+| 4 | **Circular + Shuffle** | Full index range via wrapping + shuffle without replacement. | Every valid position seen once per epoch |
