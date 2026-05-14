@@ -53,3 +53,14 @@ All four strategies converged identically across 15,000 training steps
 | **Sampling strategy** | **Any of four** | **~0.02–0.05 — within noise** |
 
 ---
+
+## Why the Theory Didn't Show Up in Practice 
+Rajput, Gupta and Papailiopoulos (ICML 2020) prove that SGD without replacement converges at O(n/T²) vs O(1/T) for with-replacement — but only when **T grows faster than n**.
+
+In this experiment: 
+- **n** ≈ 1,003,790 valid starting positions
+- **T** = 15,000 steps
+- T is ~66× **smaller** than n — the theoretical condition was never satisfied
+
+
+At less than half an epoch, even random sampling rarely repeats positions. The coverage advantage of shuffle-based strategies is real in theory, negligible here in practice.
