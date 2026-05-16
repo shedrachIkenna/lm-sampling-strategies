@@ -109,3 +109,18 @@ seed       = 42
 ```
  
 ---
+
+## Experimental History
+ 
+This result required four runs to reach a valid setup. The journey is part of the finding.
+ 
+| Run | Corpus | Capacity | Dropout | Steps | Outcome |
+|---|---|---|---|---|---|
+| 1 | 10k tokens | 800k params | 0.1 | 2,000 | **Severe overfitting** — train 0.18, val 3.19. Corpus/capacity mismatch. |
+| 2 | 1M tokens | 103k params | 0.3 | 5,000 | **Model too small** — val loss floored at 1.77. |
+| 3 | 1M tokens | 800k params | 0.3 | 5,000 | **Terminated too early** — both curves still descending. |
+| 4 | 1M tokens | 800k params | 0.3 | 15,000 | ✅ **Valid** — reported results. |
+ 
+> Run 1 is a cautionary tale. The tokens-per-parameter ratio was **0.012** — roughly 70× below a healthy range. The model had more capacity than there were characters in the training file.
+ 
+---
