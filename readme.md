@@ -212,3 +212,7 @@ On CPU, 15,000 steps takes ~45–60 minutes. On a T4 GPU (Google Colab free tier
 - Vaswani, A. et al. (2017). [Attention Is All You Need](https://arxiv.org/abs/1706.03762). *NeurIPS 2017*.
 - Karpathy, A. (2022). [nanoGPT](https://github.com/karpathy/nanoGPT). GitHub.
 ---
+
+## Author
+ 
+**Shedrach Ikenna Nwali** · Personal Research Project · 2026
