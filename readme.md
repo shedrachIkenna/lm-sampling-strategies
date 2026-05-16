@@ -183,3 +183,22 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 On CPU, 15,000 steps takes ~45–60 minutes. On a T4 GPU (Google Colab free tier), ~4–5 minutes.
  
 ---
+
+
+## Repository Structure
+ 
+```
+.
+├── sampling_strategy_comparison.py   # Main experiment script
+├── sampling_strategy_research_paper.pdf  # Full research paper
+├── sampling_strategy_research_paper.md   # Paper in markdown
+├── sampling_results.csv              # Raw loss data (all four runs)
+├── figures/
+│   ├── sampling_comparison_run1.png  # Run 1 — overfitting (invalidated)
+│   ├── sampling_comparison_run2.png  # Run 2 — model too small (inconclusive)
+│   ├── sampling_comparison_run3.png  # Run 3 — too early (inconclusive)
+│   └── sampling_comparison_run4.png  # Run 4 — final valid results
+└── README.md
+```
+ 
+---
