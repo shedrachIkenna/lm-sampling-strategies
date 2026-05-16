@@ -91,3 +91,21 @@ Total trainable parameters: 800,512
 **Why RoPE?** Unlike sinusoidal positional encoding, RoPE encodes position by rotating query and key vectors inside attention, not by adding a signal to the token embedding. This encodes relative position rather than absolute position and generalizes more naturally to longer sequences. 
 
 ---
+
+## Experimental Configuration 
+
+```python
+block_size = 64     # context window
+batch_size = 32    # 1 batch contains 32 blocks of seq_len 64 
+n_embd     = 128      # embedding dimension
+n_head     = 4        # attention heads
+n_layer    = 4        # transformer blocks
+dropout    = 0.3
+lr         = 3e-4     # AdamW learning rate
+max_iters  = 15_000
+eval_interval = 150   # checkpoint every N steps
+eval_batches  = 20    # val loss averaged over N batches
+seed       = 42
+```
+ 
+---
