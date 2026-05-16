@@ -171,3 +171,15 @@ The script will:
 3. Run all four strategies sequentially
 4. Save results to `sampling_results.csv`
 5. Generate and save `sampling_comparison.png`
+
+### GPU recommended
+ 
+The script auto-detects CUDA:
+ 
+```python
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+```
+ 
+On CPU, 15,000 steps takes ~45–60 minutes. On a T4 GPU (Google Colab free tier), ~4–5 minutes.
+ 
+---
