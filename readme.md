@@ -202,3 +202,13 @@ On CPU, 15,000 steps takes ~45–60 minutes. On a T4 GPU (Google Colab free tier
 ```
  
 ---
+
+## References
+ 
+- Rajput, S., Gupta, A., & Papailiopoulos, D. (2020). [Closing the Convergence Gap of SGD Without Replacement](https://proceedings.mlr.press/v119/rajput20a.html). *ICML 2020*.
+- Nagaraj, D., Jain, P., & Netrapalli, P. (2019). [SGD Without Replacement: Sharper Rates for General Smooth Convex Functions](https://proceedings.mlr.press/v97/nagaraj19a.html). *ICML 2019*.
+- Shamir, O. (2016). [Without-Replacement Sampling for Stochastic Gradient Methods](https://arxiv.org/abs/1603.00570). *NeurIPS 2016*.
+- Su, J. et al. (2021). [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864). *arXiv*.
+- Vaswani, A. et al. (2017). [Attention Is All You Need](https://arxiv.org/abs/1706.03762). *NeurIPS 2017*.
+- Karpathy, A. (2022). [nanoGPT](https://github.com/karpathy/nanoGPT). GitHub.
+---
