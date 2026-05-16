@@ -74,8 +74,8 @@ Decoder-only transformer with Rotary Positional Embedding (RoPE)
 
 ```
 TinyTransformerLM(
-  token_emb : Embedding(65, 128)
-  rotary_emb : RotaryEmbedding(d_head=32, max_seq=64)
+  token_emb     :Embedding(65, 128)
+  rotary_emb    :RotaryEmbedding(d_head=32, max_seq=64)
   layers x4     : TransformerBlock(
       ln1       : LayerNorm(128)
       attn      : MultiHeadSelfAttention(d_model=128, n_heads=4)
@@ -87,3 +87,7 @@ TinyTransformerLM(
 )
 Total trainable parameters: 800,512
 ```
+
+**Why RoPE?** Unlike sinusoidal positional encoding, RoPE encodes position by rotating query and key vectors inside attention, not by adding a signal to the token embedding. This encodes relative position rather than absolute position and generalizes more naturally to longer sequences. 
+
+---
