@@ -64,3 +64,6 @@ In this experiment:
 
 
 At less than half an epoch, even random sampling rarely repeats positions. The coverage advantage of shuffle-based strategies is real in theory, negligible here in practice.
+
+**This isn't just a limitation of this experiment - its structural** 
+Modern LLMs are trained on trillions of tokens. Even with massive compute budget, T never approaches n. The theoretical regime where without-replacement sampling provably wins is the opposite of how languague models are trained at meaningful scale. The theory is mathematically sound, but the conditions it requires simply doesn't exist in practice.
