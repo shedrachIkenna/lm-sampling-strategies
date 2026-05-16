@@ -216,3 +216,7 @@ On CPU, 15,000 steps takes ~45–60 minutes. On a T4 GPU (Google Colab free tier
 ## Author
  
 **Shedrach Ikenna Nwali** · Personal Research Project · 2026
+
+---
+ 
+*Null results are real results. The experiment answered the question correctly — the answer just wasn't what the theory predicted.*
