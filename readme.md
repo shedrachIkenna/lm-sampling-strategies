@@ -124,3 +124,22 @@ This result required four runs to reach a valid setup. The journey is part of th
 > Run 1 is a cautionary tale. The tokens-per-parameter ratio was **0.012** — roughly 70× below a healthy range. The model had more capacity than there were characters in the training file.
  
 ---
+
+## Reproducibility
+ 
+All four strategy runs start from **identical initial weights** and use the **same random seed** throughout.
+ 
+```python
+def set_seed(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+```
+ 
+Initial weights are saved to `init_weights.pth` before any training begins and reloaded before each run. Any observed difference between strategies is attributable to the sampling strategy alone.
+ 
+---
