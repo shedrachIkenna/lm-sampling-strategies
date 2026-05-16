@@ -67,3 +67,23 @@ At less than half an epoch, even random sampling rarely repeats positions. The c
 
 **This isn't just a limitation of this experiment - its structural** 
 Modern LLMs are trained on trillions of tokens. Even with massive compute budget, T never approaches n. The theoretical regime where without-replacement sampling provably wins is the opposite of how languague models are trained at meaningful scale. The theory is mathematically sound, but the conditions it requires simply doesn't exist in practice.
+
+## Model Architecture 
+
+Decoder-only transformer with Rotary Positional Embedding (RoPE)
+
+```
+TinyTransformerLM(
+  token_emb : Embedding(65, 128)
+  rotary_emb : RotaryEmbedding(d_head=32, max_seq=64)
+  layers x4     : TransformerBlock(
+      ln1       : LayerNorm(128)
+      attn      : MultiHeadSelfAttention(d_model=128, n_heads=4)
+      ln2       : LayerNorm(128)
+      ffn       : FeedForward(128 -> 512 -> 128, GELU, dropout=0.3)
+  )
+  ln_f          : LayerNorm(128)
+  head          : Linear(128 -> 65)  [weight-tied to token_emb]
+)
+Total trainable parameters: 800,512
+```
