@@ -143,3 +143,31 @@ def set_seed(seed: int) -> None:
 Initial weights are saved to `init_weights.pth` before any training begins and reloaded before each run. Any observed difference between strategies is attributable to the sampling strategy alone.
  
 ---
+
+
+## Getting Started
+ 
+### Requirements
+ 
+```bash
+pip install torch numpy matplotlib
+```
+ 
+Or with the HuggingFace dataset loader:
+ 
+```bash
+pip install torch numpy matplotlib requests
+```
+ 
+### Run the experiment
+ 
+```bash
+python sampling_strategy_comparison.py
+```
+ 
+The script will:
+1. Download tinyshakespeare from GitHub automatically
+2. Save initial weights to `init_weights.pth`
+3. Run all four strategies sequentially
+4. Save results to `sampling_results.csv`
+5. Generate and save `sampling_comparison.png`
