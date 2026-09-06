@@ -494,10 +494,10 @@ circular_shuffle_sampler = CircularShuffleSampler(train_data)
 
 # Run all four experiment 
 experiments = { 
-    "Random Sampling (Baseline)": lambda: get_batch_random("train"), 
-    "Shuffle Sampling": shuffle_sampler.next_batch, 
-    "Circular Sampling": lambda: get_batch_circular("train"), 
-    "Circular + Shuffle Sampling": circular_shuffle_sampler.next_batch,
+    "Random (baseline)": lambda: get_batch_random("train"), 
+    "Shuffle": shuffle_sampler.next_batch, 
+    "Circular": lambda: get_batch_circular("train"), 
+    "Circular + Shuffle": circular_shuffle_sampler.next_batch,
 }
 
 results = {}
@@ -527,7 +527,7 @@ for name, res in results.items():
     print(
         f"{name:<25}"
         f"{res['final_train_loss']:>11.4f}"
-        f"{res['final_val_los']:>10.4f}"
+        f"{res['final_val_loss']:>10.4f}"
         f"{conv:>12}"
     )
 
