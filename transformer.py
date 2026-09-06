@@ -257,7 +257,7 @@ class LayerNorm(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor: 
         mu = x.mean(-1, keepdim=True)
-        var = x.var(-1, unbiased=True)
+        var = x.var(-1, unbiased=True, keepdim=True)
         x_norm = (x - mu) / torch.sqrt(var + self.eps)
         return self.gamma * x_norm + self.beta
     
