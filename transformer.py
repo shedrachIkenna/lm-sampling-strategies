@@ -401,7 +401,7 @@ def evaluate(model: TinyTransformerLM, n_batches: int = eval_batches) -> dict:
     """
     model.eval()
     out = {}
-    for split in ("train", "loss"):
+    for split in ("train", "val"):
         losses = []
         for _ in range(n_batches): 
             xb, yb = get_batch_random(split)
@@ -453,13 +453,15 @@ def train_run(technique_name: str, get_train_batch_fn) -> dict:
         # Checkpoint 
         if step % eval_interval == 0 or step == max_iters - 1: 
             metrics = evaluate(model)
-            iter_history.append(metrics["train"])
+            iter_history.append(step)
+            train_history.append(metrics["train"])
             val_history.append(metrics["val"])
 
             if convergence_step is None and metrics["val"] <= CONVERGENCE_THRESHOLD: 
                 convergence_step = step
 
-            converged_tag = " <- converged" if convergence_step == step else print(
+            converged_tag = " <- converged" if convergence_step == step else ""
+            print(
                 f"Step {step:>4d} | "
                 f"Train {metrics['train']:.4f} | "
                 f"Val {metrics['val']:.4f}"
