@@ -288,7 +288,7 @@ class MultiHeadSelfAttention(nn.Module):
             q, k = apply_rotary_emb(q, k, cos, sin)
         
         # Scaled dot product attention
-        scores = torch.matmul(q, k.transpose(-2, -1)) / math.sqrt(self.d_head)
+        scores = torch.matmul(q, k.transpose(-2, -1)) / math.sqrt(self.d_heads)
 
         # Apply mask 
         if mask is not None: 
