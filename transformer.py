@@ -292,7 +292,7 @@ class MultiHeadSelfAttention(nn.Module):
 
         # Apply mask 
         if mask is not None: 
-            scores = scores.masked_fill(mask == 0, float=("-inf"))
+            scores = scores.masked_fill(mask == 0, float("-inf"))
         
         probs = self.dropout(F.softmax(scores, dim=-1))
         out = torch.matmul(probs, v)
